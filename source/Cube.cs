@@ -139,21 +139,21 @@ namespace L4
 
 					// will occur 4 times
 
-					var x = (plain.P1.Y * (plain.P2.Z * plain.P3.X - plain.P2.X * plain.P3.Z)
-						+ plain.P1.Z * (plain.P2.X * plain.P3.Y - plain.P3.X * plain.P2.Y))
+                    var x = (c1 * (plain.P3.X * plain.P2.Z - plain.P2.X * plain.P3.Z)
+                        + c1 * (plain.P2.X * plain.P3.Y - plain.P3.X * plain.P2.Y))
 						/ (plain.P3.Y * plain.P2.Z - plain.P2.Y * plain.P3.Z);
-					var y = (plain.P1.X * (plain.P2.Y * plain.P3.Z - plain.P3.Y * plain.P2.Z)
-						+ plain.P1.Z * (plain.P2.X * plain.P3.Y - plain.P3.X * plain.P2.Y))
+                    var y = (c1 * (plain.P2.Y * plain.P3.Z - plain.P3.Y * plain.P2.Z)
+						+ c2 * (plain.P2.X * plain.P3.Y - plain.P3.X * plain.P2.Y))
 						/ (plain.P2.X * plain.P3.Z - plain.P3.X * plain.P2.Z);
-					var z = (plain.P1.X * (plain.P2.Y * plain.P3.Z - plain.P3.Y * plain.P2.Z)
-						+ plain.P1.Y * (plain.P2.Z * plain.P3.X - plain.P2.X * plain.P3.Z))
+					var z = (c1 * (plain.P2.Y * plain.P3.Z - plain.P3.Y * plain.P2.Z)
+						+ c2 * (plain.P2.Z * plain.P3.X - plain.P2.X * plain.P3.Z))
 						/ (plain.P3.X * plain.P2.Y - plain.P2.X * plain.P3.Y);
 
-					if (x <= 1)
+					if (Math.Abs(x) <= 1)
 						list[i++] = new Point3f(x, c1, c2);
-					if (y <= 1)
+					if (Math.Abs(y) <= 1)
 						list[i++] = new Point3f(c1, y, c2);
-					if (z <= 1)
+					if (Math.Abs(z) <= 1)
 						list[i++] = new Point3f(c1, c2, z);
 				}
 			}
