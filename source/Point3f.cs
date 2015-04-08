@@ -53,6 +53,43 @@ namespace L4
             return new float[] { X, Y, Z };
         }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Point3f))
+                return false;
+
+            Point3f p = (Point3f)obj;
+            return p == this;
+        }
+
+        public bool Equals(Point3f p)
+        {
+            // If parameter is null return false:
+            if ((object)p == null)
+            {
+                return false;
+            }
+
+            // Return true if the fields match:
+            return (X == p.X) && (Y == p.Y) && (Z == p.Z);
+        }
+
+        public override int GetHashCode()
+        {
+            return (int) (X * Y * Z);
+        }
+
+        public static bool operator ==(Point3f a, Point3f b)
+        {
+            // Return true if the fields match:
+            return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        }
+
+        public static bool operator !=(Point3f a, Point3f b)
+        {
+            return !(a == b);
+        }
+
         override public String ToString()
         {
             return "(" + X.ToString() + "; " + Y.ToString() + "; " + Z.ToString() + ")";
