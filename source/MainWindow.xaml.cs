@@ -28,6 +28,7 @@ namespace L4
         public MainWindow()
         {
             InitializeComponent();
+            updateCoordinateLabels();
         }
 
         private void openGLControl_OpenGLDraw(object sender, OpenGLEventArgs args)
@@ -149,7 +150,7 @@ namespace L4
 
             gl.LoadIdentity();
 
-            gl.Perspective(60.0f, (double)Width / (double)Height, 0.01, 100.0);
+            gl.Perspective(45.0f, (double)Width / (double)Height, 0.01, 100.0);
 
             gl.LookAt(0, 0, 5, 0, 0, 0, 0, 1, 0);
 
@@ -260,10 +261,12 @@ namespace L4
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 first = indexToPoint(indexFromObject(sender), pos);
+                updateCoordinateLabels();
             }
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 second = indexToPoint(indexFromObject(sender), pos);
+                updateCoordinateLabels();
             }
         }
 
@@ -272,7 +275,12 @@ namespace L4
             Cube cube = new Cube();
             
             var path = cube.getPath(first, second);
+        }
 
+        private void updateCoordinateLabels()
+        {
+            firstPoint.Content = first;
+            secondPoint.Content = second;
         }
     }
 }

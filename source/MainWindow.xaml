@@ -4,23 +4,22 @@
         Title="SharpGL WPF Application" Height="410" Width="613" 
         xmlns:sharpGL="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF">
     <Grid HorizontalAlignment="Left" Width="603">
-
-        <!-- The OpenGL control provides a OpenGL drawing surface. -->
         <sharpGL:OpenGLControl 
-            Name="openGLControl" OpenGLDraw="openGLControl_OpenGLDraw" 
+            x:Name="openGLControl" OpenGLDraw="openGLControl_OpenGLDraw" 
             OpenGLInitialized="openGLControl_OpenGLInitialized" Resized="openGLControl_Resized"
             MouseMove="openGLControl_MouseMove"
-            DrawFPS="True" RenderContextType="FBO" FrameRate="60" HorizontalAlignment="Left" Width="372"/>
-        <Rectangle Name="top" Fill="#FFF4F4F5" Margin="0,130,55,0" Stroke="Black" MouseMove="Border_MouseMove" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" Width="40"/>
-        <Rectangle Name="front" Fill="#FFF4F4F5" Height="40" Margin="0,175,55,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
-        <Rectangle Name="left" Fill="#FFF4F4F5" Height="40" Margin="0,175,100,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
-        <Rectangle Name="right" Fill="#FFF4F4F5" Height="40" Margin="0,175,10,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
-        <Rectangle Name="bottom" Fill="#FFF4F4F5" Height="40" Margin="0,220,55,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
-        <Rectangle Name="back" Fill="#FFF4F4F5" Height="40" Margin="0,265,55,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
-        <Button Content="Test button" HorizontalAlignment="Left" Margin="508,72,0,0" VerticalAlignment="Top" Width="74" PreviewMouseDown="Button_MouseDown" RenderTransformOrigin="-1.14,-3.425"/>
+            DrawFPS="True" RenderContextType="FBO" FrameRate="60" HorizontalAlignment="Left" Width="446"/>
+        <Rectangle x:Name="top" Fill="#FFF4F4F5" Margin="0,130,55,0" Stroke="Black" MouseMove="Border_MouseMove" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" Width="40"/>
+        <Rectangle x:Name="front" Fill="#FFF4F4F5" Height="40" Margin="0,175,55,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
+        <Rectangle x:Name="left" Fill="#FFF4F4F5" Height="40" Margin="0,175,100,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
+        <Rectangle x:Name="right" Fill="#FFF4F4F5" Height="40" Margin="0,175,10,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
+        <Rectangle x:Name="bottom" Fill="#FFF4F4F5" Height="40" Margin="0,220,55,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
+        <Rectangle x:Name="back" Fill="#FFF4F4F5" Height="40" Margin="0,265,55,0" Stroke="Black" VerticalAlignment="Top" MouseMove="Border_MouseMove" HorizontalAlignment="Right" Width="40"/>
+        <Button Content="Test button" HorizontalAlignment="Left" Margin="508,310,0,0" VerticalAlignment="Top" Width="74" PreviewMouseDown="Button_MouseDown" RenderTransformOrigin="-1.14,-3.425"/>
         <CheckBox x:Name="isFilled" Content="Заповнити куб" HorizontalAlignment="Left" Margin="492,354,0,0" VerticalAlignment="Top"/>
         <Label Content="Точки:" HorizontalAlignment="Left" Margin="463,10,0,0" VerticalAlignment="Top" Width="130"/>
         <Label x:Name="firstPoint" Content="" HorizontalAlignment="Right" Margin="0,41,10,0" VerticalAlignment="Top" Width="128"/>
         <Label x:Name="secondPoint" Content="" Margin="0,72,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="130"/>
+
     </Grid>
 </Window>
