@@ -18,6 +18,13 @@ namespace L4
 {
     public partial class MainWindow : Window
     {
+        private Point3f first = new Point3f(-1, -1, -1);
+        private Point3f second = new Point3f(1, 1, 1);
+        private Point rotation = new Point();
+        private List<Line3f> lines = new List<Line3f>();
+
+        private Point lastMousePos;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,7 +34,6 @@ namespace L4
         {
             OpenGL gl = openGLControl.OpenGL;
 
-
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
             gl.LoadIdentity();
@@ -35,77 +41,80 @@ namespace L4
             gl.Rotate(rotation.X, 0.0f, 1.0f, 0.0f);
             gl.Rotate(rotation.Y, 1.0f, 0.0f, 0.0f);
 
-            const float size = 1.0f;
+            float size = 0.95f;
 
+            if (isFilled.IsChecked.Value)
+            {
+                gl.Begin(OpenGL.GL_QUADS);
+
+                gl.Color(0.0f, 0.0f, 1.0f);
+                // Top face (y = size)
+                gl.Vertex(size, size, -size);
+                gl.Vertex(-size, size, -size);
+                gl.Vertex(-size, size, size);
+                gl.Vertex(size, size, size);
+
+                // Bottom face (y = -size)  
+                gl.Vertex(size, -size, size);
+                gl.Vertex(-size, -size, size);
+                gl.Vertex(-size, -size, -size);
+                gl.Vertex(size, -size, -size);
+
+                // Front face  (z = size)
+                gl.Vertex(size, size, size);
+                gl.Vertex(-size, size, size);
+                gl.Vertex(-size, -size, size);
+                gl.Vertex(size, -size, size);
+
+                // Back face (z = -size)
+                gl.Vertex(size, -size, -size);
+                gl.Vertex(-size, -size, -size);
+                gl.Vertex(-size, size, -size);
+                gl.Vertex(size, size, -size);
+
+                // Left face (x = -size)
+                gl.Vertex(-size, size, size);
+                gl.Vertex(-size, size, -size);
+                gl.Vertex(-size, -size, -size);
+                gl.Vertex(-size, -size, size);
+
+                // Right face (x = size)
+                gl.Vertex(size, size, -size);
+                gl.Vertex(size, size, size);
+                gl.Vertex(size, -size, size);
+                gl.Vertex(size, -size, -size);
+
+                gl.End();
+            }
+
+            size = 1.0f;
             gl.LineWidth(2.0f);
+            gl.Color(1.0f, 0.0f, 0.0f);
             gl.Begin(OpenGL.GL_LINE_STRIP);
 
-            gl.Vertex(-size, -size, -size);
-            gl.Vertex(size, -size, -size);
-            gl.Vertex(size, size, -size);
-            gl.Vertex(-size, size, -size);
-            gl.Vertex(-size, -size, -size);
+                gl.Vertex(-size, -size, -size);
+                gl.Vertex(size, -size, -size);
+                gl.Vertex(size, size, -size);
+                gl.Vertex(-size, size, -size);
+                gl.Vertex(-size, -size, -size);
 
-            gl.Vertex(-size, -size, size);
-            gl.Vertex(size, -size, size);
-            gl.Vertex(size, size, size);
-            gl.Vertex(-size, size, size);
-            gl.Vertex(-size, -size, size);
+                gl.Vertex(-size, -size, size);
+                gl.Vertex(size, -size, size);
+                gl.Vertex(size, size, size);
+                gl.Vertex(-size, size, size);
+                gl.Vertex(-size, -size, size);
 
-            gl.Vertex(-size, size, size);
-            gl.Vertex(-size, size, -size);
+                gl.Vertex(-size, size, size);
+                gl.Vertex(-size, size, -size);
 
-            gl.Vertex(size, size, -size);
-            gl.Vertex(size, size, size);
+                gl.Vertex(size, size, -size);
+                gl.Vertex(size, size, size);
 
-            gl.Vertex(size, -size, size);
-            gl.Vertex(size, -size, -size);
-
-            /*
-            // Top face (y = size)
-            gl.Color(1.0f, 0.5f, 0.0f);    
-            gl.Vertex(size, size, -size);
-            gl.Vertex(-size, size, -size);
-            gl.Vertex(-size, size, size);
-            gl.Vertex(size, size, size);
-
-            // Bottom face (y = -size)
-            gl.Color(1.0f, 0.5f, 0.0f);    
-            gl.Vertex(size, -size, size);
-            gl.Vertex(-size, -size, size);
-            gl.Vertex(-size, -size, -size);
-            gl.Vertex(size, -size, -size);
-
-            // Front face  (z = size)
-            gl.Color(1.0f, 0.5f, 0.0f);
-            gl.Vertex(size, size, size);
-            gl.Vertex(-size, size, size);
-            gl.Vertex(-size, -size, size);
-            gl.Vertex(size, -size, size);
-
-            // Back face (z = -size)
-            gl.Color(1.0f, 0.5f, 0.0f);
-            gl.Vertex(size, -size, -size);
-            gl.Vertex(-size, -size, -size);
-            gl.Vertex(-size, size, -size);
-            gl.Vertex(size, size, -size);
-
-            // Left face (x = -size)
-            gl.Color(1.0f, 0.5f, 0.0f);
-            gl.Vertex(-size, size, size);
-            gl.Vertex(-size, size, -size);
-            gl.Vertex(-size, -size, -size);
-            gl.Vertex(-size, -size, size);
-
-            // Right face (x = size)
-            gl.Color(1.0f, 0.5f, 0.0f);
-            gl.Vertex(size, size, -size);
-            gl.Vertex(size, size, size);
-            gl.Vertex(size, -size, size);
-            gl.Vertex(size, -size, -size);*/
+                gl.Vertex(size, -size, size);
+                gl.Vertex(size, -size, -size);
 
             gl.End();
-
+            
             gl.PointSize(7.0f);
             gl.Begin(OpenGL.GL_POINTS);
             gl.Color(1.0f, 1.0f, 0.0f);
@@ -121,6 +130,8 @@ namespace L4
                 gl.Vertex(line.p1.get());
                 gl.Vertex(line.p2.get());
             }
+            gl.Vertex(first.get());
+            gl.Vertex(second.get());
             gl.End();
         }
 
@@ -163,11 +174,6 @@ namespace L4
             public readonly Point3f color;
         }
 
-        private Point3f first = new Point3f();
-        private Point3f second = new Point3f();
-        private Point rotation = new Point();
-        private List<Line3f> lines = new List<Line3f>();
-
         private void openGLControl_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -189,17 +195,6 @@ namespace L4
                 lastMousePos.X = 0;
                 lastMousePos.Y = 0;
             }
-
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                
-            }
-        }
-        private Point lastMousePos;
-
-        private void TextBox_TextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = true;
         }
 
         /*
@@ -213,7 +208,7 @@ namespace L4
         private Point3f indexToPoint(byte index, Point p) 
         {
             float x = (float)p.X,
-                  y = (float)p.Y,
+                  y = -(float)p.Y,
                   z = 1;
 
             switch (index)
@@ -225,7 +220,7 @@ namespace L4
                     x = -1;
                     break;
                 case 2:
-                    z = x;
+                    z = -x;
                     x = 1;
                     break;
                 case 3:
@@ -233,10 +228,11 @@ namespace L4
                     y = -1;
                     break;
                 case 4:
-                    z = y;
+                    z = -y;
                     y = 1;
                     break;
                 case 5:
+                    y = -y;
                     z = -1;
                     break;
                 default:
@@ -269,20 +265,13 @@ namespace L4
             {
                 second = indexToPoint(indexFromObject(sender), pos);
             }
-//            output.Content = indexToPoint(indexFromObject(sender), pos);
         }
 
         private void Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Cube cube = new Cube();
             
-            output.Content += "_1";
-
             var path = cube.getPath(first, second);
-//            foreach (var p in path)
-//            {
-//                output.Content += "_";
-//            }
 
         }
     }
