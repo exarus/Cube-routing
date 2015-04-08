@@ -13,111 +13,15 @@ namespace L4
         private static readonly Point3f center = new Point3f();
 		private static readonly float[] EDGE_POSSIBLE_COORDINATES = { -1, 1 };
 
-        private Point3f A { get; set; }
-        private Point3f B { get; set; }
-        private Point3f C { get; set; }
-        private Point3f D { get; set; }
-        private Point3f A1 { get; set; }
-        private Point3f B1 { get; set; }
-        private Point3f C1 { get; set; }
-        private Point3f D1 { get; set; }
-
-        public Cube() 
+        public List<List<Point3f>> getPath(Point3f from, Point3f to)
         {
-            A =  new Point3f(0, 0, 0);
-            B =  new Point3f(0, 1, 0);
-            C =  new Point3f(1, 1, 0);
-            D =  new Point3f(1, 0, 0);
-            A1 = new Point3f(0, 0, 1);
-            B1 = new Point3f(0, 1, 1);
-            C1 = new Point3f(1, 1, 1);
-            D1 = new Point3f(1, 0, 1);
-        }
-
-        /// <summary>
-        /// Converts a 3D point to the name of the cube point.
-        /// The start of the coordinates is in the point "A". 
-        /// The sides are placed according to the cube.jpg.
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        public string getName(Point3f point)
-        {
-            if (point.Z == 0)
-                if (point.Y == 0)
-                    if (point.X == 0)
-                        return "A";
-                    else
-                        return "D";
-                else
-                    if (point.X == 0)
-                        return "B";
-                    else
-                        return "C";
-            else
-                if (point.Y == 0)
-                    if (point.X == 0)
-                        return "A₁";
-                    else
-                        return "D₁";
-                else
-                    if (point.X == 0)
-                        return "B₁";
-                    else
-                        return "C₁";
-        }
-
-        public Point3f toPoint(string name)
-        {
-            switch (name)
-            {
-                case "A": return A;
-                case "B": return B;
-                case "C": return C;
-                case "D": return D;
-                case "A₁": return A1;
-                case "B₁": return B1;
-                case "C₁": return C1;
-                case "D₁": return D1;
-                default: throw new FormatException("Expected: A-D or A₁-D₁. Instead got: " + name + ".");
-            }
-        }
-
-        public string getPath(string from, string to)
-        {
-            var path = new StringBuilder();
-            var cursor = this.toPoint(from);
-            path.Append(getName(cursor));
-
-            var subtractPoint = this.toPoint(to).Subtract(cursor);
-            if (subtractPoint.X != 0) {
-                cursor.X += subtractPoint.X;
-                path.Append(DELIMITER + getName(cursor));
-            }
-            if (subtractPoint.Y != 0)
-            {
-                cursor.Y += subtractPoint.Y;
-                path.Append(DELIMITER + getName(cursor));
-            }
-            if (subtractPoint.Z != 0)
-            {
-                cursor.Z += subtractPoint.Z;
-                path.Append(DELIMITER + getName(cursor));
-            }
-
-            return path.ToString();
-        }
-
-        public List<Point3f>[] getPath(Point3f from, Point3f to)
-        {
-            var path = new List<Point3f>();
-            path.Add(from);
-
             // 1 edge case
             if (isOnOneEdge(from, to))
             {
-                path.Add(to);
-                return new List<Point3f>[] { path };
+                var lists = new List<List<Point3f>>();
+                var list = new List<Point3f>(new Point3f[] {from, to});
+                lists.Add(list);
+                return lists;
             }
             else if (passesCenter(new Line3D(from, to)))
             {
@@ -127,12 +31,24 @@ namespace L4
             {
                 var plain = new Plain3D(from, to);
                 var points = getPointsWherePlaneCrossesEdges(plain);
-                for (int i = 0; i < points.Length; i++)
-                {
-                    Console.WriteLine(points[i].X + " " + points[i].Y + " " + points[i].Z);
-                }
+                return calculateBestPath(from, points, to);
             }
 
+            return null;
+        }
+
+        private static List<List<Point3f>> calculateBestPath(Point3f from, Point3f[] through, Point3f to)
+        {
+            var lists = new List<List<Point3f>>();
+            var currentList = new List<Point3f>();
+            currentList.Add(from);
+            foreach (var p in through)
+            {
+                if (isOnOneEdge(currentList.Last(), p))
+                {
+                    //TODO
+                }
+            }
             return null;
         }
         
