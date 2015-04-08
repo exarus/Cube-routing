@@ -28,7 +28,7 @@ namespace L4
         public MainWindow()
         {
             InitializeComponent();
-            updateCoordinateLabels();
+            coordinatesChanged();
         }
 
         private void openGLControl_OpenGLDraw(object sender, OpenGLEventArgs args)
@@ -48,7 +48,7 @@ namespace L4
             {
                 gl.Begin(OpenGL.GL_QUADS);
 
-                gl.Color(0.0f, 0.0f, 1.0f);
+                gl.Color(0.1f, 0.1f, 0.8f);
                 // Top face (y = size)
                 gl.Vertex(size, size, -size);
                 gl.Vertex(-size, size, -size);
@@ -131,8 +131,8 @@ namespace L4
                 gl.Vertex(line.p1.get());
                 gl.Vertex(line.p2.get());
             }
-            gl.Vertex(first.get());
-            gl.Vertex(second.get());
+//            gl.Vertex(first.get());
+//            gl.Vertex(second.get());
             gl.End();
         }
 
@@ -160,7 +160,7 @@ namespace L4
         public struct Line3f
         {
             public Line3f(Point3f p1, Point3f p2) :
-                this(p1, p2, new Point3f(0, 0, 0))
+                this(p1, p2, new Point3f(1.0f, 1.0f, 0.0f))
             {}
 
             public Line3f(Point3f p1, Point3f p2, Point3f color)
@@ -261,26 +261,47 @@ namespace L4
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 first = indexToPoint(indexFromObject(sender), pos);
-                updateCoordinateLabels();
+                coordinatesChanged();
             }
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 second = indexToPoint(indexFromObject(sender), pos);
-                updateCoordinateLabels();
+                coordinatesChanged();
+            }
+        }
+        
+        private void Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            updatePath();
+        }
+
+        private void updatePath()
+        {
+            lines.Clear();
+
+            Cube cube = new Cube();
+
+            var paths = cube.getPath(first, second);
+
+            foreach(List<Point3f> path in paths) {
+                if (path.Count >= 2)
+                {
+                    Line3f line = new Line3f(path.First(), path.Last());
+                    lines.Add(line);
+                    for (int i = 1; i < path.Count; i++)
+                    {
+                        line = new Line3f(path[i - 1], path[i]);
+                        lines.Add(line);
+                    }
+                }
             }
         }
 
-        private void Button_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Cube cube = new Cube();
-            
-            var path = cube.getPath(first, second);
-        }
-
-        private void updateCoordinateLabels()
+        private void coordinatesChanged()
         {
             firstPoint.Content = first;
             secondPoint.Content = second;
+            lines.Clear();
         }
     }
 }
