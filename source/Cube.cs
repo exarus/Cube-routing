@@ -121,7 +121,7 @@ namespace L4
             }
             else if (passesCenter(new Line3D(from, to)))
             {
-                
+                // TODO the case has my dick on it
             }
             else // multi edge one-path case
             {
