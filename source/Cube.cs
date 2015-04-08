@@ -119,18 +119,24 @@ namespace L4
                 path.Add(to);
                 return new List<Point3f>[] { path };
             }
-
-			// multi edge case
-            var plain = new Plain3D(from, to);
-            var points = getPointsWhereEdgesCrossingPlane(plain);
-			for (int i = 0; i < points.Length; i++) {
-				Console.WriteLine (points [i].X + " " + points [i].Y + " " + points [i].Z);
-			}
+            else if (passesCenter(new Line3D(from, to)))
+            {
+                
+            }
+            else // multi edge one-path case
+            {
+                var plain = new Plain3D(from, to);
+                var points = getPointsWherePlaneCrossesEdges(plain);
+                for (int i = 0; i < points.Length; i++)
+                {
+                    Console.WriteLine(points[i].X + " " + points[i].Y + " " + points[i].Z);
+                }
+            }
 
             return null;
         }
         
-        public static Point3f[] getPointsWhereEdgesCrossingPlane(Plain3D plain)
+        private static Point3f[] getPointsWherePlaneCrossesEdges(Plain3D plain)
         {
 			var list = new Point3f[EDGE_COUNT];
 			var i = 0;
@@ -159,16 +165,24 @@ namespace L4
 			}
 
 			var result = new Point3f[i];
-			Array.Copy (list, result, i);
+			Array.Copy(list, result, i);
 			return result;
         }
 
-        public static bool isOnOneEdge(Point3f from, Point3f to)
+        private static bool isOnOneEdge(Point3f from, Point3f to)
         {
             return Math.Abs(from.X) == 1 && from.X == to.X ||
                 Math.Abs(from.Y) == 1 && from.Y == to.Y ||
                 Math.Abs(from.Z) == 1 && from.Z == to.Z;
         }
 
+        private static bool passesCenter(Line3D line)
+        {
+            float lineCenterX = (line.P1.X + line.P2.X) / 2;
+            float lineCenterY = (line.P1.Y + line.P2.Y) / 2;
+            float lineCenterZ = (line.P1.Z + line.P2.Z) / 2;
+            var lineCenter = new Point3f(lineCenterX, lineCenterY, lineCenterZ);
+            return center == lineCenter;
+        }
     }
 }
