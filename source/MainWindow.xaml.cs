@@ -19,7 +19,7 @@ namespace L4
     public partial class MainWindow : Window
     {
         private Point3f first = new Point3f(-1, -1, -1);
-        private Point3f second = new Point3f(1, 1, 1);
+        private Point3f second = new Point3f(0.99f, 1, 1);
         private Point rotation = new Point();
         private List<Line3f> lines = new List<Line3f>();
 
@@ -288,6 +288,7 @@ namespace L4
                 {
                     Line3f line = new Line3f(path.First(), path.Last());
                     lines.Add(line);
+                    // TODO: iterator
                     for (int i = 1; i < path.Count; i++)
                     {
                         line = new Line3f(path[i - 1], path[i]);
@@ -302,6 +303,7 @@ namespace L4
             firstPoint.Content = first;
             secondPoint.Content = second;
             lines.Clear();
+            updatePath();
         }
     }
 }
