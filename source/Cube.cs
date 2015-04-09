@@ -8,8 +8,9 @@ namespace L4
 {
     public sealed class Cube
     {
-        private const string DELIMITER = " -> ";
+        private const double ACCEPTABLE_DELTA = 0.1;
 		private const int EDGE_COUNT = 12;
+        private const int MAX_PATH_SIZE = 4;
         private static readonly Point3f center = new Point3f();
 		private static readonly float[] EDGE_POSSIBLE_COORDINATES = { -1, 1 };
 
@@ -26,30 +27,64 @@ namespace L4
             else if (passesCenter(new Line3D(from, to)))
             {
                 // TODO the case has my dick on it
+                return null;
             }
-            else // multi edge one-path case
+            else // multi edge
             {
                 var plain = new Plain3D(from, to);
                 var points = getPointsWherePlaneCrossesEdges(plain);
                 return calculateBestPath(from, points, to);
             }
-
-            return null;
         }
 
         private static List<List<Point3f>> calculateBestPath(Point3f from, Point3f[] through, Point3f to)
         {
             var lists = new List<List<Point3f>>();
-            var currentList = new List<Point3f>();
-            currentList.Add(from);
-            foreach (var p in through)
+            Console.WriteLine("from" + from);
+            for (int i = 0; i < through.Length; i++)
             {
-                if (isOnOneEdge(currentList.Last(), p))
+                Console.WriteLine(through[i]);
+            }
+            Console.WriteLine("to: " + to);
+
+            foreach (var p1 in through)
+            {
+                if (isOnOneEdge(from, p1))
                 {
-                    //TODO
+                    var newList = new List<Point3f>(MAX_PATH_SIZE);
+                    newList.Add(from);
+                    newList.Add(p1);
+
+                    // three edge case
+                    if (!isOnOneEdge(p1, to)) 
+                    {
+                        foreach (var p2 in through)
+                        {
+                            if (p1 != p2 && isOnOneEdge(p1, p2) && isOnOneEdge(p2, to))
+                            {
+                                newList.Add(p2);
+                                break;
+                            }
+                        }
+                    }
+
+                    newList.Add(to);
+                    lists.Add(newList);
                 }
             }
-            return null;
+
+            /*
+            float length = 0;
+            foreach (var list in lists)
+            {
+                var p1 = list[0];
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var
+                }
+            }*/
+
+            return lists;
         }
         
         private static Point3f[] getPointsWherePlaneCrossesEdges(Plain3D plain)

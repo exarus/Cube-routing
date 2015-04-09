@@ -20,5 +20,13 @@ namespace L4
             this.P1 = p1;
             this.P2 = p2;
         }
+
+        public double getLength()
+        {
+            var dX = P2.X - P1.X;
+            var dY = P2.Y - P1.Y;
+            var dZ = P2.Z - P1.Z;
+            return Math.Sqrt(dX * dX + dY * dY + dZ * dZ);
+        }
     }
 }
