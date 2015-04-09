@@ -40,12 +40,6 @@ namespace L4
         private static List<List<Point3f>> calculateBestPath(Point3f from, Point3f[] through, Point3f to)
         {
             var lists = new List<List<Point3f>>();
-            Console.WriteLine("from" + from);
-            for (int i = 0; i < through.Length; i++)
-            {
-                Console.WriteLine(through[i]);
-            }
-            Console.WriteLine("to: " + to);
 
             foreach (var p1 in through)
             {
