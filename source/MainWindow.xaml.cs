@@ -21,6 +21,7 @@ namespace L4
         private Point3f first = new Point3f(-1, -1, -1);
         private Point3f second = new Point3f(0.99f, 1, 1);
         private Point rotation = new Point();
+        private readonly Cube CUBE = new Cube();
         private List<Line3f> lines = new List<Line3f>();
 
         private Point lastMousePos;
@@ -279,14 +280,12 @@ namespace L4
         {
             lines.Clear();
 
-            Cube cube = new Cube();
-
-            var paths = cube.getPath(first, second);
+            var paths = CUBE.getPath(first, second);
 
             foreach(List<Point3f> path in paths) {
                 if (path.Count >= 2)
                 {
-                    Line3f line = new Line3f(path.First(), path.Last());
+                    Line3f line = new Line3f(path.First(), path.Last(), new Point3f(0, 0, 1));
                     lines.Add(line);
                     // TODO: iterator
                     for (int i = 1; i < path.Count; i++)

@@ -11,7 +11,6 @@ namespace L4
         private const double ACCEPTABLE_DELTA = 0.1;
 		private const int EDGE_COUNT = 12;
         private const int MAX_PATH_SIZE = 4;
-        private static readonly Point3f center = new Point3f();
 		private static readonly float[] EDGE_POSSIBLE_COORDINATES = { -1, 1 };
 
         public List<List<Point3f>> getPath(Point3f from, Point3f to)
@@ -24,7 +23,7 @@ namespace L4
                 lists.Add(list);
                 return lists;
             }
-            else if (passesCenter(new Line3D(from, to)))
+            else if (new Line3D(from, to).passesZero())
             {
                 // TODO the case has my dick on it
                 return null;
@@ -33,52 +32,71 @@ namespace L4
             {
                 var plain = new Plain3D(from, to);
                 var points = getPointsWherePlaneCrossesEdges(plain);
-                return calculateBestPath(from, points, to);
+                return calculateBestPaths(from, points, to);
             }
         }
 
-        private static List<List<Point3f>> calculateBestPath(Point3f from, Point3f[] through, Point3f to)
+        private static List<List<Point3f>> calculateBestPaths(Point3f from, Point3f[] through, Point3f to)
         {
-            var lists = new List<List<Point3f>>();
+            var paths = new List<List<Point3f>>();
 
             foreach (var p1 in through)
             {
                 if (isOnOneEdge(from, p1))
                 {
-                    var newList = new List<Point3f>(MAX_PATH_SIZE);
-                    newList.Add(from);
-                    newList.Add(p1);
 
                     // three edge case
-                    if (!isOnOneEdge(p1, to)) 
+                    if (isOnOneEdge(p1, to)) 
+                    {
+                        var newList = new List<Point3f>(MAX_PATH_SIZE);
+                        newList.Add(from);
+                        newList.Add(p1);
+                        newList.Add(to);
+                        paths.Add(newList);
+                    }
+                    else
                     {
                         foreach (var p2 in through)
                         {
                             if (p1 != p2 && isOnOneEdge(p1, p2) && isOnOneEdge(p2, to))
                             {
+                                var newList = new List<Point3f>(MAX_PATH_SIZE);
+                                newList.Add(from);
+                                newList.Add(p1);
                                 newList.Add(p2);
+                                newList.Add(to);
+                                paths.Add(newList);
                                 break;
                             }
                         }
                     }
-
-                    newList.Add(to);
-                    lists.Add(newList);
                 }
             }
 
-            /*
-            float length = 0;
-            foreach (var list in lists)
-            {
-                var p1 = list[0];
-                for (int i = 0; i < list.Count; i++)
-                {
-                    var
-                }
-            }*/
+            filterLongPaths(paths);            
+            return paths;
+        }
 
-            return lists;
+        private static void filterLongPaths(List<List<Point3f>> paths)
+        {
+            double minLength = Double.MaxValue;
+            for (int i = 0; i < paths.Count; i++)
+            {
+                double length = 0;
+                for (int j = 0; j < paths[i].Count - 1; j++)
+                {
+                    length += new Line3D(paths[i][j], paths[i][j + 1]).getLength();
+                }
+                if (length - minLength <= ACCEPTABLE_DELTA)
+                {
+                    minLength = length; //TODO not the smartest way (but fastest) to reasign minlength
+                }
+                else
+                {
+                    paths.RemoveAt(i);
+                    --i;
+                }
+            }
         }
         
         private static Point3f[] getPointsWherePlaneCrossesEdges(Plain3D plain)
@@ -119,15 +137,6 @@ namespace L4
             return Math.Abs(from.X) == 1 && from.X == to.X ||
                 Math.Abs(from.Y) == 1 && from.Y == to.Y ||
                 Math.Abs(from.Z) == 1 && from.Z == to.Z;
-        }
-
-        private static bool passesCenter(Line3D line)
-        {
-            float lineCenterX = (line.P1.X + line.P2.X) / 2;
-            float lineCenterY = (line.P1.Y + line.P2.Y) / 2;
-            float lineCenterZ = (line.P1.Z + line.P2.Z) / 2;
-            var lineCenter = new Point3f(lineCenterX, lineCenterY, lineCenterZ);
-            return center == lineCenter;
         }
     }
 }
